@@ -1,0 +1,37 @@
+package com.example.account.service;
+
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
+import org.springframework.stereotype.Service;
+
+import java.util.concurrent.TimeUnit;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor // private final로 선언한 필드를 가진 생성자를 만듦
+public class RedisTestService {
+    private final RedissonClient redissonClient;
+
+    public String getLock(){
+        RLock lock = redissonClient.getLock("sampleLock");
+
+        try{
+            // lock을 1초동안 기다리고, 3초동안 잡고있겠다는 뜻
+            boolean isLock = lock.tryLock(1,5, TimeUnit.SECONDS);
+
+            if(!isLock){
+                log.error("============== Lock acquisition failed ==============");
+                return "Lock failed";
+            }
+
+        } catch (Exception e){
+            log.error("Redis lock failed");
+        }
+        return "Lock success";
+    }
+
+
+}
