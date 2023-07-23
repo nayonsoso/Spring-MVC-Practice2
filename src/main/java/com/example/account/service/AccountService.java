@@ -26,6 +26,10 @@ public class AccountService {
 
     @Transactional
     public Account getAccount(Long id){
+        if(id<0){
+            throw new RuntimeException("Minus");
+        }
+
         // findById가 Optional을 리턴하기 때문에 바로 get하는게 사실 권장되진 않음
         // null이 있을 수 있으므로
         return accountRepository.findById(id).get();

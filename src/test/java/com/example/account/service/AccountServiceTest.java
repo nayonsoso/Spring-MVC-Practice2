@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -16,6 +17,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest { // 한번에 모든 테스트를 실행할 수도 있음
@@ -40,9 +43,32 @@ class AccountServiceTest { // 한번에 모든 테스트를 실행할 수도 있
         //when
         Account account = accountService.getAccount(45555L);
 
+        //test
+        //조회되는 ID를 저장할 captor
+        ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+        //계좌를 조회하는 기능에서는 findById가 한번만 실행되어야 함
+        verify(accountRepository, times(1)).findById(captor.capture());
+        //계좌를 조회하는 기능인데, 계좌를 새로 생성하면 안되므로
+        verify(accountRepository, times(0)).save(any());
+        //captor에 저장된 값 검증 - 다양한 assert 이용
+        assertEquals(45555L, captor.getValue());
+        assertNotEquals(55555L, captor.getValue());
+        assertTrue(45555L==captor.getValue());
+
         //then
         assertEquals("65789", account.getAccountNumber());
         assertEquals(AccountStatus.UNREGISTERED, account.getAccountStatus());
+    }
+
+    @Test
+    @DisplayName("계좌 조회 실패 - 음수로 조회")
+    void testFailedToSearchAccount(){
+        //given
+        //when - accountService.getAccount를 실행했을 때 RuntimeException이 뜰 것임을 검증
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> accountService.getAccount(-10L));
+        //then
+        assertEquals("Minus", exception.getMessage());
     }
 
     /*
