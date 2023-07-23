@@ -10,8 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
@@ -47,29 +45,41 @@ class AccountServiceTest { // 한번에 모든 테스트를 실행할 수도 있
         assertEquals(AccountStatus.UNREGISTERED, account.getAccountStatus());
     }
 
-
+    /*
+    // 각 테스트 전에 실행됨
     @BeforeEach
-        // 각 테스트 전에 실행됨
     void init() {
         accountService.createAccount();
     }
+    */
 
     @Test
+    @DisplayName("Test 이름 변경")
     void testGetAccount() {
-        // id는 autoIncrement이므로 id==1인 계좌가 생성됨
-        Account account = accountService.getAccount(1L);
+        given(accountRepository.findById(anyLong()))
+                .willReturn(Optional.of(Account.builder()
+                        .accountStatus(AccountStatus.UNREGISTERED)
+                        .accountNumber("65789").build()));
+        //when
+        Account account = accountService.getAccount(45555L);
 
-        assertEquals("40000", account.getAccountNumber());
-        assertEquals(AccountStatus.IN_USE, account.getAccountStatus());
+        //then
+        assertEquals("65789", account.getAccountNumber());
+        assertEquals(AccountStatus.UNREGISTERED, account.getAccountStatus());
     }
 
     @Test
     void testGetAccount2() {
-        // id는 autoIncrement이므로 id==2인 계좌가 생성됨
-        Account account = accountService.getAccount(2L);
+        given(accountRepository.findById(anyLong()))
+                .willReturn(Optional.of(Account.builder()
+                        .accountStatus(AccountStatus.UNREGISTERED)
+                        .accountNumber("65789").build()));
+        //when
+        Account account = accountService.getAccount(45555L);
 
-        assertEquals("40000", account.getAccountNumber());
-        assertEquals(AccountStatus.IN_USE, account.getAccountStatus());
+        //then
+        assertEquals("65789", account.getAccountNumber());
+        assertEquals(AccountStatus.UNREGISTERED, account.getAccountStatus());
     }
 }
 
