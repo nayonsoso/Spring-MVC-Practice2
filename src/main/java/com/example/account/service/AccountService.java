@@ -19,7 +19,7 @@ public class AccountService {
         // Account에 @Builder 어노테이션을 사용했기 때문에 이런 문법을 사용할 수 있음
         Account account = Account.builder()
                 .accountNumber("40000")
-                .accountStatus(AccountStatus.IN_USE)
+                .accountStatusStr(AccountStatus.IN_USE)
                 .build();
         accountRepository.save(account); // 이 save는 어디서 튀어나온거지?
     }

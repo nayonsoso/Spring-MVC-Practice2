@@ -18,5 +18,8 @@ public class Account { // Entity : 자바 객체처럼 보이지만 실제로는
     private String accountNumber;
 
     @Enumerated(EnumType.STRING) // enum은 내부적으로 0,1,2 ... 로 저장되는데, 이러면 의미를 알 수 없으므로 String Type으로 설정
-    private AccountStatus accountStatus;
+    private AccountStatus accountStatusStr;
+
+    @Enumerated(EnumType.ORDINAL)
+    private AccountStatus accountStatusInt;
 }
