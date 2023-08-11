@@ -14,9 +14,9 @@
 
 ---
 
-### @Value
+### 📌 @Value
 
-> yml 또는 properties 에서 설정한 메타데이터를 가져와서 넣어준다.
+> 💡 yml 또는 properties 에서 설정한 메타데이터를 가져와서 넣어준다.
 
 yml, properties 파일은 애플리케이션에서 사용하는 설정값, 환경변수들을 관리하는 파일로
 
@@ -54,9 +54,9 @@ public class RedisRepositoryConfig {
 
 ---
 
-### yml파일에서 민감한 정보를 숨기는 방법
+###  📌 yml파일에서 민감한 정보를 숨기는 방법
 
-> Git에 DB연결 관련 정보같은 민감한 내용들이 그대로 올라가면 안되기 때문에 따로 처리를 해야한다.
+> 💡 Git에 DB연결 관련 정보같은 민감한 내용들이 그대로 올라가면 안되기 때문에 따로 처리를 해야한다.
 
 - **1) application-?.yml 작성** 
   - 따로 관리할 내용이 담긴 파일을 생성한다. 
@@ -85,9 +85,9 @@ application-s3.yml
 
 ---
 
-### @Builder을 @NoArgsConstructor와 @AllArgsConstructor와 함께 써야하는 이유
+### 📌 @Builder을 @NoArgsConstructor와 @AllArgsConstructor와 함께 써야하는 이유
 
-> Builder 패턴에는 전체 생성자가 필요한데,
+> 💡 Builder 패턴에는 전체 생성자가 필요한데,
 > `@NoArgsConstructor`를 쓰면 전체 생성자가 자동 생성되지 않으므로 
 > `@AllArgsConstructor`와 함께 써야 함
 
@@ -106,20 +106,53 @@ NoArgsConstructor가 어떤 파라미터도 없는 기본 생성자를 만들어
 앞서 말했던 Builder의 '전체 생성자 자동 생성 원칙'을 기억하는가?
 
 **_어떤 생성자도 없을 때에만 전체 생성자를 만들어주는데,
-NoArgsConstructor가 기본 생성자를 만들므로 전체 생성자가 생성되지 않는 것이다._**
-이를 위해서 @AllArgsConstructor를 함께 선언해줘야 한다.
+NoArgsConstructor가 기본 생성자를 만들므로 전체 생성자가 생성되지 않는다._**
+따라서 전체 생성자를 만들기 위해 @AllArgsConstructor를 함께 선언해줘야 한다.
 이러한 원리를 배경으로 @Builder 어노테이션을 쓸 때는 @AllArgsConstructor와 @NoArgsConstructor를 써주는게 좋다.
 (@Builder만 써도 되긴 하지만, 관행적으로 써주는게 좋다.)
 
 ---
 
-### 엔티티의 어노테이션 - @GeneratedValue
+### 📌 엔티티의 어노테이션 - @Id, @GeneratedValue
+
+> 💡 @Id
+- 테이블의 PK 와 객체의 필드를 매핑시켜주는 어노테이션
+- @GeneratedValue 없이 @Id 만 사용하는 경우 기본키를 직접 할당해줘야 한다.
+> 💡 @GeneratedValue
+- DB가 **자동 생성**하는 값을 PK 로 만들어주는 어노테이션
+- 속성으로는 strategy가 있는데, 이를 통해 자동 생성 전략을 지정해 줄 수 있다.
+  - 속성의 종류 : IDENTITY, SEQUNCE, TABLE, AUTO
+  - 이 중에 가장 많이 쓰이는 **strategy = GenerationType.IDENTITY** 옵션은 DB에 PK 생성을 위임하는 전략이다.
+  - 주로 auto_increment되는 PK를 만들기 위해 사용된다.
+    - 원리 : DDL로 PK를 auto_increment로 설정해놓고 Entity의 PK 생성을 DB에 위임하면, auto_increment를 따르는 PK가 저장됨
+
+```java
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder // Builder를 쓰려면 @AllArgsConstructor와 @NoArgsConstructor가 있어야함
+@Entity
+public class Account { // Entity : 자바 객체처럼 보이지만 실제로는 설정 파일
+    @Id // 테이블의 PK로 설정한다는 의미
+    @GeneratedValue // PK가 autoIncrement됨
+    private Long id;
+
+    private String accountNumber;
+
+    @Enumerated(EnumType.STRING)
+    private AccountStatus accountStatusStr;
+
+    @Enumerated(EnumType.ORDINAL)
+    private AccountStatus accountStatusInt;
+}
+```
 
 ---
-### 엔티티의 어노테이션 - @Enumerated
+### 📌 엔티티의 어노테이션 - @Enumerated
 
 
-> @Enumerated(EnumType.?)
+> 💡 @Enumerated(EnumType.?)
 
 자바 enum 타입을 엔티티 클래스의 속성으로 사용할 수 있다. @Enumerated 애노테이션에는 두 가지 EnumType이 존재한다.
 
@@ -135,7 +168,7 @@ UNREGISTERED
 }
 ```
 
-**▷ EnumType.ORDINAL**
+**▶ EnumType.ORDINAL**
 
 ``` java
 @Enumerated(EnumType.ORDINAL)
@@ -145,7 +178,7 @@ private AccountStatus accountStatusInt;
 EnumType을 ORDINAL으로 지정하면 ENUM에서 선언된 `순서`에 해당하는 정수가 저장된다.
 IN_USE는 1이, UNREGISTERED은 2가 저장된다.
 
-**▷ EnumType.STRING**
+**▶ EnumType.STRING**
 
 ``` java
 @Enumerated(EnumType.STRING)
@@ -154,7 +187,7 @@ private AccountStatus accountStatusStr;
 
 STRING으로 지정하면 "IN_USE", "UNREGISTERED" 문자열 자체가 저장된다.
 
-**▷ 테이블 구조**
+**▶ 테이블 구조**
 
 이렇게 만들어준 엔티티의 테이블 구조는 아래와 같다.
 
@@ -167,20 +200,11 @@ create table account (
     primary key (id)
 )
 ```
-
-
-
-
-
 ---
 
+### 📌 Controller 테스트
 
 
-### Redis의 SpinLock
-
----
-
-### ❗Controller 테스트❗
 
 ---
 
