@@ -32,6 +32,4 @@ public class RedisTestService {
         }
         return "Lock success";
     }
-
-
 }
