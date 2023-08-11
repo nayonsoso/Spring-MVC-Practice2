@@ -8,9 +8,8 @@
 - yml 파일에서 민감한 정보를 숨기는 방법
 - @Builder을 @AllArgsConstructor와 @NoArgsConstructor와 함께 써야하는 이유
 - 엔티티의 어노테이션 (@Enumerated, @GeneratedValue)
-- Redis의 SpinLock
-- ❗Controller 테스트❗
-- ❗Service 테스트❗
+- Controller 테스트 - @WebMvcTest, @MockBean
+- Service 테스트 - @ExtendWith(MockitoExtension.class), @Mock, @InjectMocks
 
 ---
 
@@ -344,12 +343,3 @@ class AccountServiceTest {
 |----------|--------------------------|--------------------------|
 | @WebMvcTest  | @ExtendWith(MokitoExtension.class)    | @SpringBootTest   |
 
----
-
-### Reference
-
-@Value 설명 참고 : https://variety82p.tistory.com/entry/Springboot-%EA%B0%9C%EB%B0%9C%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%85%B8%EC%B6%9C%EB%90%98%EB%A9%B4-%EC%95%88%EB%90%98%EB%8A%94-%EC%84%A4%EC%A0%95%EA%B0%92-%ED%99%98%EA%B2%BD%EB%B3%80%EC%88%98-%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0
-
-yml 설명 참고 : https://variety82p.tistory.com/entry/Springboot-%EA%B0%9C%EB%B0%9C%ED%99%98%EA%B2%BD%EC%97%90%EC%84%9C-%EB%85%B8%EC%B6%9C%EB%90%98%EB%A9%B4-%EC%95%88%EB%90%98%EB%8A%94-%EC%84%A4%EC%A0%95%EA%B0%92-%ED%99%98%EA%B2%BD%EB%B3%80%EC%88%98-%EA%B4%80%EB%A6%AC%ED%95%98%EA%B8%B0#-gitigroe%--%EC%-E%--%EC%--%B-
-
-@Builder 설명 참고 : https://resilient-923.tistory.com/418
