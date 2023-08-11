@@ -3,7 +3,6 @@ package com.example.account.service;
 import com.example.account.domain.Account;
 import com.example.account.domain.AccountStatus;
 import com.example.account.repository.AccountRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +14,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -38,9 +38,10 @@ class AccountServiceTest { // 한번에 모든 테스트를 실행할 수도 있
         //findByID를 설계 : Long이 주어졌을 때, 상태와 넘버가 이러한 Account를 리턴한다.
         given(accountRepository.findById(anyLong()))
                 .willReturn(Optional.of(Account.builder()
-                        .accountStatus(AccountStatus.UNREGISTERED)
+                        .accountStatusStr(AccountStatus.UNREGISTERED)
                         .accountNumber("65789").build()));
-        //when
+
+        //when - 테스트할 서비스 내용
         Account account = accountService.getAccount(45555L);
 
         //test
@@ -57,7 +58,7 @@ class AccountServiceTest { // 한번에 모든 테스트를 실행할 수도 있
 
         //then
         assertEquals("65789", account.getAccountNumber());
-        assertEquals(AccountStatus.UNREGISTERED, account.getAccountStatus());
+        assertEquals(AccountStatus.UNREGISTERED, account.getAccountStatusStr());
     }
 
     @Test
@@ -84,28 +85,28 @@ class AccountServiceTest { // 한번에 모든 테스트를 실행할 수도 있
     void testGetAccount() {
         given(accountRepository.findById(anyLong()))
                 .willReturn(Optional.of(Account.builder()
-                        .accountStatus(AccountStatus.UNREGISTERED)
+                        .accountStatusStr(AccountStatus.UNREGISTERED)
                         .accountNumber("65789").build()));
         //when
         Account account = accountService.getAccount(45555L);
 
         //then
         assertEquals("65789", account.getAccountNumber());
-        assertEquals(AccountStatus.UNREGISTERED, account.getAccountStatus());
+        assertEquals(AccountStatus.UNREGISTERED, account.getAccountStatusStr());
     }
 
     @Test
     void testGetAccount2() {
         given(accountRepository.findById(anyLong()))
                 .willReturn(Optional.of(Account.builder()
-                        .accountStatus(AccountStatus.UNREGISTERED)
+                        .accountStatusStr(AccountStatus.UNREGISTERED)
                         .accountNumber("65789").build()));
         //when
         Account account = accountService.getAccount(45555L);
 
         //then
         assertEquals("65789", account.getAccountNumber());
-        assertEquals(AccountStatus.UNREGISTERED, account.getAccountStatus());
+        assertEquals(AccountStatus.UNREGISTERED, account.getAccountStatusStr());
     }
 }
 
